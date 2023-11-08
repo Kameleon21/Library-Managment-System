@@ -1,9 +1,8 @@
-import java.util.Scanner
-import java.lang.System.exit
+import mu.KotlinLogging
 import kotlin.system.exitProcess
+import Utils.ScannerInput
 
-val scanner = Scanner(System.`in`)
-
+private val logger = KotlinLogging.logger {}
 // global variables for login
 var isLoggedIn = false
 var isLibrarian = false
@@ -22,7 +21,7 @@ fun showMainMenu(): Int {
         3. Exit
     """.trimIndent()
     )
-    return scanner.nextInt()
+    return ScannerInput.readNextInt("Enter your choice: ")
 }
 
 fun showUserMenu(): Int {
@@ -38,7 +37,7 @@ fun showUserMenu(): Int {
         6. Logout
     """.trimIndent()
     )
-    return scanner.nextInt()
+    return ScannerInput.readNextInt("Enter your choice: ")
 }
 
 fun showAdminMenu(): Int {
@@ -58,7 +57,7 @@ fun showAdminMenu(): Int {
         10. Logout
     """.trimIndent()
     )
-    return scanner.nextInt()
+    return ScannerInput.readNextInt("Enter your choice: ")
 }
 
 fun runMenu() {
@@ -73,14 +72,17 @@ fun runMenu() {
 }
 
 fun login() {
+    logger.info { "Login function called" }
     println("You chose to login")
 }
 
 fun register() {
+    logger.info { "Register function called" }
     println("You chose to register")
 }
 
 fun exit() {
+    logger.info { "Exit function called" }
     println("You chose to exit")
     exitProcess(0)
 }
