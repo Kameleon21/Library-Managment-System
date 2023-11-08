@@ -1,6 +1,6 @@
 import mu.KotlinLogging
 import kotlin.system.exitProcess
-import Utils.ScannerInput
+import utils.ScannerInput
 
 private val logger = KotlinLogging.logger {}
 // global variables for login
