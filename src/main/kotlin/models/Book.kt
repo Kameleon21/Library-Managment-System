@@ -1,12 +1,12 @@
 package models
 
-data class Book(
-    val bookId: Int,
+class Book(
+    val bookID: Int,
     val title: String,
     val author: String,
     val ISBN: String,
-    val genre: String,
-    val pubYear: Int,
-    val copiesAvailable: Int,
+    val publicationYear: String,
+    val availableCopies: Int,
     val totalCopies: Int
-)
+) {
+}
