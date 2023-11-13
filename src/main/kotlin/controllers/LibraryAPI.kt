@@ -11,14 +11,27 @@ class LibraryAPI {
         return books.add(book)
     }
 
-    private fun addPerson(person: Person): Boolean {
+     fun addPerson(person: Person): Boolean {
         return persons.add(person)
     }
 
-    fun registerMember( name: String, email: String, password: String): Boolean {
-        val personId = persons.size + 1
-        val role = "member"
-        val person = Person(personId, name, email, password, role)
+    fun numberOfBooks(): Int {
+        return books.size
+    }
+
+    fun numberOfPersons(): Int {
+        return persons.size
+    }
+
+    fun register(ID: Int, name: String, email: String, password: String, role: String): Boolean {
+        if (persons.any { it.email == email }) return false
+        val person = Person(
+            ID,
+            name,
+            email,
+            password,
+            role
+        )
         return addPerson(person)
     }
 

@@ -107,10 +107,12 @@ fun login() {
 
 fun register() {
     logger.info { "Register function called" }
+    val ID = readNextInt("Enter your ID: ")
     val name = promptForValidName()
     val email = promptForValidEmail()
     val password = promptForValidPassword()
-    val registered = LibraryAPI.registerMember(name, email, password)
+    val role = readNextLine("Enter your role: ")
+    val registered = LibraryAPI.register(ID,name, email, password, role)
     if (registered) {
         println(
             """

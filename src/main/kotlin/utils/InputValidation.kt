@@ -6,7 +6,7 @@ object InputValidation {
     fun promptForValidName(): String {
         var name: String
         do {
-         name = readNextLine("Enter your full name ( minimum 2 characters): ")
+            name = readNextLine("Enter your full name ( minimum 2 characters): ")
             if (!validateName(name)) println("Invalid name")
         } while (!validateName(name))
         return name
@@ -30,15 +30,15 @@ object InputValidation {
         return password
     }
 
-    private fun validateEmail(email: String): Boolean {
+    fun validateEmail(email: String): Boolean {
         return email.contains("@") && email.contains(".")
     }
 
-    private fun validatePassword(password: String): Boolean {
+    fun validatePassword(password: String): Boolean {
         return password.length >= 8
     }
 
-    private fun validateName(name: String): Boolean {
+    fun validateName(name: String): Boolean {
         return name.length >= 2
     }
 }
