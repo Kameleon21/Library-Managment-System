@@ -1,5 +1,8 @@
 import controllers.LibraryAPI
 import mu.KotlinLogging
+import utils.InputValidation.promptForValidEmail
+import utils.InputValidation.promptForValidName
+import utils.InputValidation.promptForValidPassword
 import kotlin.system.exitProcess
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
@@ -24,7 +27,7 @@ fun showMainMenu(): Int {
     )
 }
 
-fun showUserMenu(userName:String): Int {
+fun showUserMenu(userName: String): Int {
     return readNextInt(
         """
         Logged in as: $userName
@@ -40,7 +43,7 @@ fun showUserMenu(userName:String): Int {
     )
 }
 
-fun showAdminMenu(adminName:String): Int {
+fun showAdminMenu(adminName: String): Int {
     return readNextInt(
         """
         Logged in as: Admin $adminName
@@ -63,13 +66,13 @@ fun showAdminMenu(adminName:String): Int {
 
 fun runMenu() {
     do {
-        when(val option = showMainMenu()) {
+        when (val option = showMainMenu()) {
             1 -> login()
             2 -> register()
             3 -> exit()
             else -> println("Invalid option $option \n")
         }
-    }while (true)
+    } while (true)
 }
 
 fun login() {
@@ -104,16 +107,18 @@ fun login() {
 
 fun register() {
     logger.info { "Register function called" }
-    val name = readNextLine("Enter your name: ")
-    val email = (readNextLine("Enter your email: "))
-    val password = readNextLine("Enter your password: ")
+    val name = promptForValidName()
+    val email = promptForValidEmail()
+    val password = promptForValidPassword()
     val registered = LibraryAPI.registerMember(name, email, password)
     if (registered) {
-        println("""
+        println(
+            """
             Registration successful
             Please login to continue 
             
-        """.trimIndent())
+        """.trimIndent()
+        )
     } else {
         println("Registration failed \n")
     }
