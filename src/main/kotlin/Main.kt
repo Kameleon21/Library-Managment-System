@@ -18,7 +18,7 @@ fun showMainMenu(): Int {
         """
         Welcome to the Personal Library Management System
         
-        Please choose an option:
+        Please choose a number option:
         1. Login 
         2. Register
         3. Exit 
@@ -31,7 +31,7 @@ fun showUserMenu(userName: String): Int {
     return readNextInt(
         """
         Logged in as: $userName
-        Please choose an option:
+        Please choose a number option:
         1. View Available Books
         2. Search Books
         3. Borrow Book
@@ -84,7 +84,22 @@ fun login() {
     if (loggedIn != null) {
         println("Login successful \n")
         if (loggedIn.role == "admin") {
-            showAdminMenu(loggedIn.name)
+           do {
+               val option = showAdminMenu(loggedIn.name)
+               when (option) {
+                   1 -> viewAllBooks()
+                   2 -> addNewBook()
+                   3 -> updateBookDetails()
+                   4 -> deleteBook()
+                   5 -> viewAllMembers()
+                   6 -> addNewMember()
+                   7 -> updateMemberDetails()
+                   8 -> deleteMember()
+                   9 -> viewBorrowingRecords()
+                   10 -> break
+                   else -> println("Invalid option")
+               }
+           } while (true)
         } else {
             do {
                 val option = showUserMenu(loggedIn.name)
@@ -166,4 +181,46 @@ fun returnBookDetails() {
     logger.info { "Return Book Details function called" }
     println("Return Book Details function called \n")
 }
+
+fun deleteBook() {
+    logger.info { "Delete Book function called" }
+    println("Delete Book function called \n")
+}
+
+fun viewAllMembers() {
+    logger.info { "View All Members function called" }
+    println("View All Members function called \n")
+}
+
+fun addNewMember() {
+    logger.info { "Add New Member function called" }
+    println("Add New Member function called \n")
+}
+
+fun updateMemberDetails() {
+    logger.info { "Update Member Details function called" }
+    println("Update Member Details function called \n")
+}
+
+
+fun deleteMember() {
+    logger.info { "Delete Member function called" }
+    println("Delete Member function called \n")
+}
+
+fun viewBorrowingRecords() {
+    logger.info { "View Borrowing Records function called" }
+    println("View Borrowing Records function called \n")
+}
+
+fun addNewBook() {
+    logger.info { "Add New Book function called" }
+    println("Add New Book function called \n")
+}
+
+fun updateBookDetails() {
+    logger.info { "Update Book Details function called" }
+    println("Update Book Details function called \n")
+}
+
 
