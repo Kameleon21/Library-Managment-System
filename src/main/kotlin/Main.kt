@@ -1,4 +1,5 @@
-import controllers.LibraryAPI
+import controllers.BookController
+import controllers.PersonController
 import mu.KotlinLogging
 import utils.InputValidation.promptForValidEmail
 import utils.InputValidation.promptForValidName
@@ -8,7 +9,8 @@ import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 
 private val logger = KotlinLogging.logger {}
-private val LibraryAPI = LibraryAPI()
+private val bookAPI = BookController()
+private val personAPI = PersonController()
 fun main() {
     runMenu()
 }
@@ -79,7 +81,7 @@ fun login() {
     logger.info { "Login function called" }
     val email = readNextLine("Enter your email: ")
     val password = readNextLine("Enter your password: ")
-    val loggedIn = LibraryAPI.login(email, password)
+    val loggedIn = personAPI.login(email, password)
 
     if (loggedIn != null) {
         println("Login successful \n")
@@ -127,7 +129,7 @@ fun register() {
     val email = promptForValidEmail()
     val password = promptForValidPassword()
     val role = readNextLine("Enter your role: ")
-    val registered = LibraryAPI.register(ID,name, email, password, role)
+    val registered = personAPI.register(ID,name, email, password, role)
     if (registered) {
         println(
             """
