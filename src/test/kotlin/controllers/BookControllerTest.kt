@@ -67,4 +67,36 @@ class BookControllerTest {
             assertEquals(5, populatedLibrary!!.numberOfBooks())
         }
     }
+
+    @Nested
+    inner class findBook {
+        @Test
+        fun `should return the book at the given index`() {
+            assertEquals(book1, populatedLibrary!!.findBook(0))
+        }
+
+        @Test
+        fun `should return null if the index is out of bounds`() {
+            assertEquals(null, populatedLibrary!!.findBook(5))
+        }
+    }
+
+    @Nested
+    inner class listtingMethods {
+        @Test
+        fun `should return a string of all books in the library`() {
+            val expected = "0:${book1.toString()}\n" +
+                    "1:${book2.toString()}\n" +
+                    "2:${book3.toString()}\n" +
+                    "3:${book4.toString()}\n" +
+                    "4:${book5.toString()}"
+
+            assertEquals(expected, populatedLibrary!!.listAllBooks())
+        }
+
+        @Test
+        fun `should return a message if there are no books in the library`() {
+            assertEquals("No books in library", emptyLibrary!!.listAllBooks())
+        }
+    }
 }
