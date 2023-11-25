@@ -103,4 +103,50 @@ class PersonControllerTest {
             assertNull(populatedLibrary!!.login("mark@gamil.com", "password"))
         }
     }
+
+
+    @Nested
+    inner class listAllMembers {
+        @Test
+        fun `should return no members when list is empty`() {
+            assertEquals("No members found", emptyLibrary!!.listAllMembers())
+        }
+        @Test
+        fun `should return all members when there are members`() {
+            val expected = "0:Person(personId=1, name=John Doe, email=john@gmail.com, password=password, role=member)\n" +
+                    "1:Person(personId=2, name=Jane Doe, email=jane@gamil.com, password=password, role=member)\n" +
+                    "2:Person(personId=3, name=Billy, email=billy@gmail.com, password=password, role=admin)"
+            assertEquals(expected, populatedLibrary!!.listAllMembers())
+        }
+    }
+
+    @Nested
+    inner class updateMember {
+        @Test
+        fun `should return true on successfulmember update`() {
+            val updateResult = populatedLibrary!!.updateMember(1,"Jane Smith","jane@gmail.com","newpassword")
+            assertTrue(updateResult)
+        }
+
+        @Test
+        fun `should return false for invalid member index`() {
+            val updateResult = populatedLibrary!!.updateMember(10,"none","none","none")
+            assertFalse(updateResult)
+        }
+    }
+
+    @Nested
+    inner class deleteMember {
+        @Test
+        fun `should return deleted member on successful deletion`() {
+            val deleteResult = populatedLibrary!!.deleteMember(1)
+            assertEquals(person2, deleteResult)
+        }
+
+        @Test
+        fun `should return null for invalid member index`() {
+            val deleteResult = populatedLibrary!!.deleteMember(10)
+            assertNull(deleteResult)
+        }
+    }
 }
