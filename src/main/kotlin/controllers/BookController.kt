@@ -1,10 +1,12 @@
 package controllers
 
 import models.Book
+import persistance.Serializer
 import utils.HelperFunctions.isValidListIndex
 
-class BookController {
-    private val books = mutableListOf<Book>()
+class BookController(serializerType: Serializer) {
+    private val serializer = serializerType
+    private var books = ArrayList<Book>()
 
     fun addBook(book: Book): Boolean {
         if (books.contains(book)) return false
@@ -41,4 +43,13 @@ class BookController {
         } else null
     }
 
+    @Throws(Exception::class)
+    fun save() {
+        serializer.write(books)
+    }
+
+    @Throws(Exception::class)
+    fun load() {
+        books = serializer.read() as ArrayList<Book>
+    }
 }

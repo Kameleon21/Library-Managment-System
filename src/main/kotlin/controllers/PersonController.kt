@@ -1,10 +1,12 @@
 package controllers
 
 import models.Person
+import persistance.Serializer
 import utils.HelperFunctions.isValidListIndex
 
-class PersonController {
-    private val persons = mutableListOf<Person>()
+class PersonController(serializerType: Serializer) {
+    private val serializer = serializerType
+    private var persons = ArrayList<Person>()
 
     fun addPerson(person: Person): Boolean {
         if (persons.any { it.email == person.email && it.personId == person.personId }) return false
@@ -62,4 +64,13 @@ class PersonController {
         return persons.firstOrNull { it.email == email && it.password == password }
     }
 
+    @Throws(Exception::class)
+    fun save() {
+        serializer.write(persons)
+    }
+
+    @Throws(Exception::class)
+    fun load() {
+        persons = serializer.read() as ArrayList<Person>
+    }
 }

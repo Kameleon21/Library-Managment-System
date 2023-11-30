@@ -1,17 +1,20 @@
 import controllers.BookController
 import controllers.PersonController
 import mu.KotlinLogging
+import persistance.XMLSerializer
 import utils.InputValidation.promptForValidEmail
 import utils.InputValidation.promptForValidName
 import utils.InputValidation.promptForValidPassword
 import kotlin.system.exitProcess
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
+import java.io.File
 
 private val logger = KotlinLogging.logger {}
-private val bookAPI = BookController()
-private val personAPI = PersonController()
+private val bookAPI = BookController(XMLSerializer(File("books.xml")))
+private val personAPI = PersonController(XMLSerializer(File("persons.xml")))
 fun main() {
+    load()
     runMenu()
 }
 
@@ -146,6 +149,7 @@ fun register() {
 fun exit() {
     logger.info { "Exit function called" }
     println("You chose to exit")
+    save()
     exitProcess(0)
 }
 
@@ -225,4 +229,19 @@ fun updateBookDetails() {
     println("Update Book Details function called \n")
 }
 
+fun load() {
+    logger.info { "Load function called" }
+    try {
+        personAPI.load()
+        bookAPI.load()
+    } catch (e: Exception) {
+        logger.error { e.message }
+    }
+}
+
+fun save() {
+    logger.info { "Save function called" }
+    personAPI.save()
+    bookAPI.save()
+}
 
