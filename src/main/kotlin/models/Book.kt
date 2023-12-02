@@ -1,12 +1,12 @@
 package models
 
-class Book(
-    val bookID: Int,
-    var title: String,
-    val author: String,
-    val ISBN: String,
-    val publicationYear: String,
-    val availableCopies: Int,
-    val totalCopies: Int
+data class Book(
+    var bookID: Int = 0,
+    var title: String = "",
+    var author: String = "",
+    var ISBN: String = "",
+    var publicationYear: String = "",
+    var availableCopies: Int = 0,
+    var totalCopies: Int = 0
 ) {
 }

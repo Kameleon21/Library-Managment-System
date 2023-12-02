@@ -9,8 +9,29 @@ class BookController(serializerType: Serializer) {
     private var books = ArrayList<Book>()
 
     fun addBook(book: Book): Boolean {
-        if (books.contains(book)) return false
         return books.add(book)
+    }
+
+    fun createBook(
+        bookId: Int,
+        title: String,
+        author: String,
+        ISBN: String,
+        pubYear: String,
+        availableCopies: Int,
+        totalCopies: Int,
+    ): Boolean {
+        if (books.any { it.ISBN == ISBN }) return false
+        val book = Book(
+            bookId,
+            title,
+            author,
+            ISBN,
+            pubYear,
+            availableCopies,
+            totalCopies
+        )
+        return addBook(book)
     }
 
     fun numberOfBooks(): Int {
@@ -26,7 +47,7 @@ class BookController(serializerType: Serializer) {
     fun listAllBooks(): String =
         if (books.isEmpty()) {
             "No books in library"
-        } else books.joinToString ( separator = "\n" )  { book -> books.indexOf(book).toString() + ":" + book.toString()}
+        } else books.joinToString(separator = "\n") { book -> books.indexOf(book).toString() + ":" + book.toString() }
 
 
     fun updateBookTitle(index: Int, bookTitle: String): Boolean {
