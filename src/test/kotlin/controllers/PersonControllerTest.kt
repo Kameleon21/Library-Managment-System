@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
+import persistance.XMLSerializer
+import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -21,8 +23,8 @@ class PersonControllerTest {
 
     @BeforeEach
     fun setUp() {
-        populatedLibrary = PersonController()
-        emptyLibrary = PersonController()
+        populatedLibrary = PersonController(XMLSerializer(File("persons.xml")))
+        emptyLibrary = PersonController(XMLSerializer(File("persons.xml")))
 
         person1 = Person(1, "John Doe", "john@gmail.com", "password", "member")
         person2 = Person(2, "Jane Doe", "jane@gamil.com", "password", "member")
@@ -39,6 +41,9 @@ class PersonControllerTest {
         person1 = null
         person2 = null
         person3 = null
+
+        File("persons.xml").delete()
+        File("persons.yaml").delete()
     }
 
 
@@ -111,11 +116,13 @@ class PersonControllerTest {
         fun `should return no members when list is empty`() {
             assertEquals("No members found", emptyLibrary!!.listAllMembers())
         }
+
         @Test
         fun `should return all members when there are members`() {
-            val expected = "0:Person(personId=1, name=John Doe, email=john@gmail.com, password=password, role=member)\n" +
-                    "1:Person(personId=2, name=Jane Doe, email=jane@gamil.com, password=password, role=member)\n" +
-                    "2:Person(personId=3, name=Billy, email=billy@gmail.com, password=password, role=admin)"
+            val expected =
+                "0:Person(personId=1, name=John Doe, email=john@gmail.com, password=password, role=member)\n" +
+                        "1:Person(personId=2, name=Jane Doe, email=jane@gamil.com, password=password, role=member)\n" +
+                        "2:Person(personId=3, name=Billy, email=billy@gmail.com, password=password, role=admin)"
             assertEquals(expected, populatedLibrary!!.listAllMembers())
         }
     }
@@ -124,13 +131,13 @@ class PersonControllerTest {
     inner class updateMember {
         @Test
         fun `should return true on successfulmember update`() {
-            val updateResult = populatedLibrary!!.updateMember(1,"Jane Smith","jane@gmail.com","newpassword")
+            val updateResult = populatedLibrary!!.updateMember(1, "Jane Smith", "jane@gmail.com", "newpassword")
             assertTrue(updateResult)
         }
 
         @Test
         fun `should return false for invalid member index`() {
-            val updateResult = populatedLibrary!!.updateMember(10,"none","none","none")
+            val updateResult = populatedLibrary!!.updateMember(10, "none", "none", "none")
             assertFalse(updateResult)
         }
     }
@@ -147,6 +154,73 @@ class PersonControllerTest {
         fun `should return null for invalid member index`() {
             val deleteResult = populatedLibrary!!.deleteMember(10)
             assertNull(deleteResult)
+        }
+    }
+
+    @Nested
+    inner class Persistance {
+        @Test
+        fun `saving and loading an empty person collection in XML doesn't crash app`() {
+            val savePersons = PersonController(XMLSerializer(File("persons.xml")))
+            savePersons.save()
+
+            val loadPersons = PersonController(XMLSerializer(File("persons.xml")))
+            loadPersons.load()
+
+            assertEquals(0, loadPersons.numberOfPersons())
+            assertEquals(0, savePersons.numberOfPersons())
+            assertEquals("No members found", loadPersons.listAllMembers())
+        }
+
+        @Test
+        fun `saving and loading an loaded person collection in XML doesn't loose data`() {
+            val savedPersons = PersonController(XMLSerializer(File("persons.xml")))
+            savedPersons.addPerson(person1!!)
+            savedPersons.addPerson(person2!!)
+            savedPersons.addPerson(person3!!)
+            savedPersons.save()
+
+            val loadedPersons = PersonController(XMLSerializer(File("persons.xml")))
+            loadedPersons.load()
+
+            assertEquals(3, loadedPersons.numberOfPersons())
+            assertEquals(3, savedPersons.numberOfPersons())
+            assertEquals(savedPersons.numberOfPersons(), loadedPersons.numberOfPersons())
+            assertEquals(savedPersons.findPerson(0), loadedPersons.findPerson(0))
+            assertEquals(savedPersons.findPerson(1), loadedPersons.findPerson(1))
+            assertEquals(savedPersons.findPerson(2), loadedPersons.findPerson(2))
+        }
+
+        @Test
+        fun `saving and loading an empty person collection in YAML doesn't crash app`() {
+            val savePersons = PersonController(XMLSerializer(File("persons.yaml")))
+            savePersons.save()
+
+            val loadPersons = PersonController(XMLSerializer(File("persons.yaml")))
+            loadPersons.load()
+
+            assertEquals(0, loadPersons.numberOfPersons())
+            assertEquals(0, savePersons.numberOfPersons())
+            assertEquals("No members found", loadPersons.listAllMembers())
+        }
+
+        @Test
+        fun `saving and loading an loaded person collection in YAML doesn't loose data`() {
+            val savedPersons = PersonController(XMLSerializer(File("persons.yaml")))
+            savedPersons.addPerson(person1!!)
+            savedPersons.addPerson(person2!!)
+            savedPersons.addPerson(person3!!)
+            savedPersons.save()
+
+            val loadedPersons = PersonController(XMLSerializer(File("persons.yaml")))
+            loadedPersons.load()
+
+            assertEquals(3, loadedPersons.numberOfPersons())
+            assertEquals(3, savedPersons.numberOfPersons())
+            assertEquals(savedPersons.numberOfPersons(), loadedPersons.numberOfPersons())
+            assertEquals(savedPersons.findPerson(0), loadedPersons.findPerson(0))
+            assertEquals(savedPersons.findPerson(1), loadedPersons.findPerson(1))
+            assertEquals(savedPersons.findPerson(2), loadedPersons.findPerson(2))
         }
     }
 }

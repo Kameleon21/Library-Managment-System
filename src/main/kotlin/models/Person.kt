@@ -1,4 +1,10 @@
 package models
 
-class Person(val personId: Int, var name: String, var email: String, var password: String, val role: String) {
+data class Person(
+    var personId: Int = 0,
+    var name: String = " ",
+    var email: String = " ",
+    var password: String = " ",
+    var role: String = "member",
+) {
 }

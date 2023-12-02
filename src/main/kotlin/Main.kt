@@ -1,17 +1,21 @@
 import controllers.BookController
 import controllers.PersonController
 import mu.KotlinLogging
+import persistance.XMLSerializer
+import persistance.YAMLSerializer
 import utils.InputValidation.promptForValidEmail
 import utils.InputValidation.promptForValidName
 import utils.InputValidation.promptForValidPassword
 import kotlin.system.exitProcess
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
+import java.io.File
 
 private val logger = KotlinLogging.logger {}
-private val bookAPI = BookController()
-private val personAPI = PersonController()
+private val bookAPI = BookController(YAMLSerializer(File("books.yaml")))
+private val personAPI = PersonController(YAMLSerializer(File("persons.yaml")))
 fun main() {
+    load()
     runMenu()
 }
 
@@ -124,7 +128,7 @@ fun login() {
 
 fun register() {
     logger.info { "Register function called" }
-    val ID = readNextInt("Enter your ID: ")
+    val ID = personAPI.numberOfPersons() + 1
     val name = promptForValidName()
     val email = promptForValidEmail()
     val password = promptForValidPassword()
@@ -146,6 +150,7 @@ fun register() {
 fun exit() {
     logger.info { "Exit function called" }
     println("You chose to exit")
+    save()
     exitProcess(0)
 }
 
@@ -176,7 +181,7 @@ fun viewMyBorrowedBooks() {
 
 fun viewAllBooks() {
     logger.info { "View All Books function called" }
-    println("View All Books function called \n")
+    println(bookAPI.listAllBooks())
 }
 
 fun returnBookDetails() {
@@ -217,7 +222,19 @@ fun viewBorrowingRecords() {
 
 fun addNewBook() {
     logger.info { "Add New Book function called" }
-    println("Add New Book function called \n")
+    val bookID = bookAPI.numberOfBooks() + 1
+    val title = readNextLine("Enter book title: ")
+    val author = readNextLine("Enter book author: ")
+    val ISBN = readNextLine("Enter book ISBN: ")
+    val publicationYear = readNextLine("Enter book publication year: ")
+    val availableCopies = readNextInt("Enter number of available copies: ")
+    val totalCopies = readNextInt("Enter number of total copies: ")
+    val added = bookAPI.createBook(bookID, title, author, ISBN, publicationYear, availableCopies, totalCopies)
+    if (added) {
+        println("Book added successfully \n")
+    } else {
+        println("Book not added \n")
+    }
 }
 
 fun updateBookDetails() {
@@ -225,4 +242,19 @@ fun updateBookDetails() {
     println("Update Book Details function called \n")
 }
 
+fun load() {
+    logger.info { "Load function called" }
+    try {
+        personAPI.load()
+        bookAPI.load()
+    } catch (e: Exception) {
+        logger.error { e.message }
+    }
+}
+
+fun save() {
+    logger.info { "Save function called" }
+    personAPI.save()
+    bookAPI.save()
+}
 
