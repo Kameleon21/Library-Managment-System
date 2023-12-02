@@ -9,6 +9,7 @@ class BookController(serializerType: Serializer) {
     private var books = ArrayList<Book>()
 
     fun addBook(book: Book): Boolean {
+        if (books.any { it.ISBN == book.ISBN }) return false
         return books.add(book)
     }
 
