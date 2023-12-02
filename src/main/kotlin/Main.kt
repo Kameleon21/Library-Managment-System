@@ -111,7 +111,7 @@ fun login() {
                 val option = showUserMenu(loggedIn.name)
                 when (option) {
                     1 -> viewAvailableBooks()
-                    2 -> searchBooks()
+                    2 -> searchBookOption()
                     3 -> borrowBook()
                     4 -> returnBook()
                     5 -> viewMyBorrowedBooks()
@@ -156,12 +156,54 @@ fun exit() {
 
 fun viewAvailableBooks() {
     logger.info { "View Available Books function called" }
-    println("View Available Books function called \n")
+    println(bookAPI.availableBooks())
 }
 
-fun searchBooks() {
+fun searchBookOption() {
     logger.info { "Search Books function called" }
-    println("Search Books function called \n")
+    do {
+        val option = readNextInt(
+            """
+            Please choose a number option:
+            1. Search by title
+            2. Search by author
+            3. Search by ISBN
+            4. Return to previous menu
+            
+        """.trimIndent()
+        )
+        when (option) {
+            1 ->  {
+                val title = readNextLine("Enter book title: ")
+                val book = bookAPI.searchBookByTitle(title)
+                if (book != null) {
+                    println(book)
+                } else {
+                    println("Book not found")
+                }
+            }
+            2 ->{
+                val author = readNextLine("Enter book author: ")
+                val book = bookAPI.searchBookByAuthor(author)
+                if (book != null) {
+                    println(book)
+                } else {
+                    println("Book not found")
+                }
+            }
+            3 -> {
+                val ISBN = readNextLine("Enter book ISBN: ")
+                val book = bookAPI.searchBookByISBN(ISBN)
+                if (book != null) {
+                    println(book)
+                } else {
+                    println("Book not found")
+                }
+            }
+            4 -> break
+            else -> println("Invalid option")
+        }
+    } while (true)
 }
 
 fun borrowBook() {
