@@ -65,6 +65,23 @@ class BookController(serializerType: Serializer) {
         } else null
     }
 
+    fun searchBookByTitle(title: String): Book? {
+        return books.find { it.title == title }
+    }
+
+    fun searchBookByAuthor(author: String): Book? {
+        return books.find { it.author == author }
+    }
+
+    fun searchBookByISBN(ISBN: String): Book? {
+        return books.find { it.ISBN == ISBN }
+    }
+
+    fun availableBooks(): String {
+        return books.filter { it.availableCopies > 0 }
+            .joinToString(separator = "\n") { book -> books.indexOf(book).toString() + ":" + book.toString() }
+    }
+
     @Throws(Exception::class)
     fun save() {
         serializer.write(books)

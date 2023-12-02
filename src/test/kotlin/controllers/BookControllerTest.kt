@@ -28,7 +28,7 @@ class BookControllerTest {
         book1 = Book(1, "The Fellowship of the Ring", "J.R.R. Tolkien", "978-0547928210", "1954", 1, 1)
         book2 = Book(2, "The Two Towers", "J.R.R. Tolkien", "978-0547928203", "1954", 1, 1)
         book3 = Book(3, "The Return of the King", "J.R.R. Tolkien", "978-0547928197", "1955", 1, 1)
-        book4 = Book(4, "The Hobbit", "J.R.R. Tolkien", "978-0547928227", "1937", 1, 1)
+        book4 = Book(4, "The Hobbit", "J.R.R. Tolkien", "978-0547928227", "1937", 0, 2)
         book5 = Book(5, "The Militarisation", "J.R.R. Tolkien", "978-0547928224", "1977", 1, 1)
 
         populatedLibrary!!.addBook(book1!!)
@@ -52,7 +52,7 @@ class BookControllerTest {
     }
 
     @Nested
-    inner class addingBooks {
+    inner class addingBooksMethods {
         @Test
         fun `should add a book to the library`() {
             val book = Book(6, "The Silmarillion", "J.R.R. Tolkien", "978-0547928234", "1977", 1, 1)
@@ -62,6 +62,17 @@ class BookControllerTest {
         @Test
         fun `should not add a book to the library if it already exists`() {
             assertFalse(populatedLibrary!!.addBook(book1!!))
+        }
+
+        @Test
+        fun `should return true when book was able to be created`() {
+            assertTrue(emptyLibrary!!.createBook(6, "The Silmarillion", "J.R.R. Tolkien", "978-0547928234", "1977", 1, 1))
+        }
+
+        @Test
+        fun `should return false when book was not able to be created`() {
+            val isDuplicate = populatedLibrary!!.createBook(1, "The Silmarillion", "J.R.R. Tolkien", "978-0547928203", "1977", 1, 1)
+            assertFalse(isDuplicate)
         }
     }
 
@@ -102,6 +113,23 @@ class BookControllerTest {
         @Test
         fun `should return a message if there are no books in the library`() {
             assertEquals("No books in library", emptyLibrary!!.listAllBooks())
+        }
+
+        @Test
+        fun `should return all books with available copies greater 0` () {
+            assertEquals(5, populatedLibrary!!.numberOfBooks())
+            val booksStored = populatedLibrary!!.availableBooks().lowercase()
+            assertTrue(booksStored.contains("the fellowship of the ring"))
+            assertTrue(booksStored.contains("the two towers"))
+            assertTrue(booksStored.contains("the return of the king"))
+            assertTrue(booksStored.contains("the militarisation"))
+        }
+
+        @Test
+        fun `should not return books with available copies equal 0` () {
+            assertEquals(5, populatedLibrary!!.numberOfBooks())
+            val booksStored = populatedLibrary!!.availableBooks().lowercase()
+            assertFalse(booksStored.contains("the hobbit"))
         }
     }
 
@@ -173,6 +201,39 @@ class BookControllerTest {
             assertEquals(savedBooks.findBook(0),loadedBooks.findBook(0))
             assertEquals(savedBooks.findBook(1),loadedBooks.findBook(1))
             assertEquals(savedBooks.findBook(2),loadedBooks.findBook(2))
+        }
+    }
+
+    @Nested
+    inner class searchFunctions {
+        @Test
+        fun `should return the book with the given title`() {
+            assertEquals(book1, populatedLibrary!!.searchBookByTitle("The Fellowship of the Ring"))
+        }
+
+        @Test
+        fun `should return the book with the given author`() {
+            assertEquals(book1, populatedLibrary!!.searchBookByAuthor("J.R.R. Tolkien"))
+        }
+
+        @Test
+        fun `should return the book with the given ISBN`() {
+            assertEquals(book1, populatedLibrary!!.searchBookByISBN("978-0547928210"))
+        }
+
+        @Test
+        fun `should return null if no book with the given title exists`() {
+            assertEquals(null, populatedLibrary!!.searchBookByTitle("The Silmarillion"))
+        }
+
+        @Test
+        fun `should return null if no book with the given author exists`() {
+            assertEquals(null, populatedLibrary!!.searchBookByAuthor("J.K. Rowling"))
+        }
+
+        @Test
+        fun `should return null if no book with the given ISBN exists`() {
+            assertEquals(null, populatedLibrary!!.searchBookByISBN("978-0547928234"))
         }
     }
 }
