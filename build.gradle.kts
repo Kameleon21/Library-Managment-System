@@ -1,14 +1,18 @@
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.9.0"
     // Plugin for Dokka - KDoc generation tool
     id("org.jetbrains.dokka") version "1.9.10"
+    jacoco
+    // plugin for klint
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
     application
 }
 
 group = "org.example"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 repositories {
     mavenCentral()
@@ -25,10 +29,26 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    // report is always generated after tests
+    finalizedBy(tasks.jacocoTestReport)
 }
 
 kotlin {
     jvmToolchain(8)
+}
+
+tasks.jar {
+    manifest.attributes["Main-Class"] = "MainKt"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(sourceSets.main.get().output)
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
 }
 
 application {

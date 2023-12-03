@@ -5,7 +5,8 @@ This application is a Personal Library Management System written in Kotlin, desi
 
 ## System Requirements
 - Java Virtual Machine (JVM)
-- Java 8
+- Java 8 or higher
+- Kotlin Runtime
 
 ## Setup and Installation
 1. Ensure you have Java 8 or higher installed on your system.
@@ -36,16 +37,21 @@ Upon running the application, you will be presented with a main menu with the fo
 Authenticated users will have additional options to view and interact with the library's catalog.
 
 ## Features
+-User authentication (login and registration).
+- Viewing available books in the library.
+- Searching for books using various criteria.
+- Borrowing and returning book functionalities.
+- Viewing currently borrowed books (for individual users).
+- Administrative functionalities for librarians (managing books and users).
+- Integrated KDoc comments and Dokka for documentation.
 
-- User login and registration system.
-- View available books.
-- Search for books by various criteria.
-- Borrow and return books.
-- View borrowed books (for users).
-- Admin functionalities for managing the library's catalog (for librarians)
+
+## Documentation
+The project includes comprehensive KDoc comments and is integrated with Dokka for generating API documentation. The generated documentation can be found in the /docs directory or hosted on GitHub Pages.
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would
+like to change.
 
 ## License
 This project is licensed under the MIT License - see the LICENSE.md file for details.
