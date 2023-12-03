@@ -1,0 +1,29 @@
+- !!models.Person
+  booksBorrowed: []
+  email: kamil@gmail.com
+  name: kamil
+  password: '123456789'
+  personId: 1
+  role: admin
+- !!models.Person
+  booksBorrowed:
+  - {ISBN: '9780007525549', author: J.R.R. Tolkien, availableCopies: 0, bookID: 4,
+    genre: Fantasy, publicationYear: '1954', title: The Two Towers, totalCopies: 1}
+  email: john@gmail.com
+  name: john
+  password: 12345678a
+  personId: 2
+  role: member
+- !!models.Person
+  booksBorrowed:
+  - {ISBN: '9780007525543', author: J.R.R. Tolkien, availableCopies: 0, bookID: 8,
+    genre: Fantasy, publicationYear: '2018', title: The Fall of Gondolin, totalCopies: 1}
+  - {ISBN: '9780007525548', author: J.R.R. Tolkien, availableCopies: 0, bookID: 3,
+    genre: Fantasy, publicationYear: '1954', title: The Fellowship of the Ring, totalCopies: 1}
+  - {ISBN: '9780007525541', author: J.R.R. Tolkien, availableCopies: 0, bookID: 6,
+    genre: Fantasy, publicationYear: '1977', title: The Silmarillion, totalCopies: 1}
+  email: jane@gmail.com
+  name: jane
+  password: 12345678b
+  personId: 3
+  role: member

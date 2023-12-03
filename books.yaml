@@ -1,0 +1,25 @@
+- !!models.Book {ISBN: '9780007525546', author: J.R.R. Tolkien, availableCopies: 1,
+  bookID: 1, genre: Fantasy, publicationYear: '1954', title: The Lord of the Rings,
+  totalCopies: 1}
+- !!models.Book {ISBN: '9780007525547', author: J.R.R. Tolkien, availableCopies: 1,
+  bookID: 2, genre: Fantasy, publicationYear: '1937', title: The Hobbit, totalCopies: 1}
+- !!models.Book {ISBN: '9780007525548', author: J.R.R. Tolkien, availableCopies: 0,
+  bookID: 3, genre: Fantasy, publicationYear: '1954', title: The Fellowship of the
+    Ring, totalCopies: 1}
+- !!models.Book {ISBN: '9780007525549', author: J.R.R. Tolkien, availableCopies: 0,
+  bookID: 4, genre: Fantasy, publicationYear: '1954', title: The Two Towers, totalCopies: 1}
+- !!models.Book {ISBN: '9780007525540', author: J.R.R. Tolkien, availableCopies: 1,
+  bookID: 5, genre: Fantasy, publicationYear: '1955', title: The Return of the King,
+  totalCopies: 1}
+- !!models.Book {ISBN: '9780007525541', author: J.R.R. Tolkien, availableCopies: 0,
+  bookID: 6, genre: Fantasy, publicationYear: '1977', title: The Silmarillion, totalCopies: 1}
+- !!models.Book {ISBN: '9780007525542', author: J.R.R. Tolkien, availableCopies: 1,
+  bookID: 7, genre: Fantasy, publicationYear: '2007', title: The Children of Húrin,
+  totalCopies: 1}
+- !!models.Book {ISBN: '9780007525543', author: J.R.R. Tolkien, availableCopies: 0,
+  bookID: 8, genre: Fantasy, publicationYear: '2018', title: The Fall of Gondolin,
+  totalCopies: 1}
+- !!models.Book {ISBN: '9780007525544', author: J.R.R. Tolkien, availableCopies: 1,
+  bookID: 9, genre: Fantasy, publicationYear: '1937', title: The Hobbit, totalCopies: 1}
+- !!models.Book {ISBN: '9780007525545', author: J.R.R. Tolkien, availableCopies: 1,
+  bookID: 10, genre: Fantasy, publicationYear: '1937', title: The Hobbit, totalCopies: 1}
