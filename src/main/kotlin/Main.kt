@@ -226,7 +226,25 @@ fun borrowBook() {
 
 fun returnBook() {
     logger.info { "Return Book function called" }
-    println("Return Book function called \n")
+    val memberId = readNextInt("Enter member ID: ") - 1
+    val foundMember = personAPI.findPerson(memberId)
+
+    if (foundMember != null) {
+        println("Books Currently Borrowed:")
+        println(personAPI.listBorrowedBooks(memberId))
+
+        val bookId = readNextInt("Enter the ID of the book you want to return: ") - 1
+        val book = bookAPI.findBook(bookId)
+
+        if (book != null) {
+            val message = personAPI.returnBookLogic(memberId, book)
+            println(message)
+        } else {
+            println("Book not found \n")
+        }
+    } else {
+        println("Member not found \n")
+    }
 }
 
 fun viewMyBorrowedBooks() {
@@ -288,7 +306,7 @@ fun updateMemberDetails() {
     val name = promptForValidName()
     val email = promptForValidEmail()
     val password = promptForValidPassword()
-    val updated = personAPI.updateMember(memberID,name, email, password)
+    val updated = personAPI.updateMember(memberID, name, email, password)
     if (updated) {
         println("Member details updated successfully \n")
     } else {
@@ -311,7 +329,7 @@ fun deleteMember() {
 
 fun viewBorrowingRecords() {
     logger.info { "View Borrowing Records function called" }
-    println("View Borrowing Records function called \n")
+    println(personAPI.showBorrowedBooksByAllMembers())
 }
 
 fun addNewBook() {

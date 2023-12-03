@@ -2,6 +2,7 @@ package controllers
 
 import models.Book
 import persistance.Serializer
+import utils.HelperFunctions.bookListLayout
 import utils.HelperFunctions.isValidListIndex
 
 class BookController(serializerType: Serializer) {
@@ -104,8 +105,7 @@ class BookController(serializerType: Serializer) {
     }
 
     fun availableBooks(): String {
-        return books.filter { it.availableCopies > 0 }
-            .joinToString(separator = "\n") { book -> books.indexOf(book).toString() + ":" + book.toString() }
+        return bookListLayout(books.filter { it.availableCopies > 0 })
     }
 
     @Throws(Exception::class)

@@ -94,6 +94,33 @@ class PersonController(serializerType: Serializer) {
         } else "Member not found"
     }
 
+    fun returnBookLogic(memberId: Int, book: Book): String {
+        val foundMember = findPerson(memberId) ?: return "Member not found"
+        if (!foundMember.booksBorrowed.contains(book)) {
+            return "Book not borrowed by member \n"
+        }
+        foundMember.booksBorrowed.remove(book)
+        book.availableCopies++
+        return "Book returned successfully \n"
+    }
+
+    fun showBorrowedBooksByAllMembers(): String {
+        val borrowedBooksInfo = persons.filter { it.booksBorrowed.isNotEmpty() }
+            .joinToString(separator = "\n\n") { person ->
+                val booksList = person.booksBorrowed.joinToString(separator = "; \n") { book ->
+                    "Book ID: ${book.bookID}, Title: ${book.title}, Author: ${book.author}, Published: ${book.publicationYear}"
+                }
+                val numberOfBooks = person.booksBorrowed.size
+                "Member ID: ${person.personId}, Name: ${person.name}, Total Borrowed Books: $numberOfBooks\nBorrowed Books: $booksList"
+            }
+
+        return if (borrowedBooksInfo.isEmpty()) {
+            "No books borrowed"
+        } else {
+            borrowedBooksInfo
+        }
+    }
+
     @Throws(Exception::class)
     fun save() {
         serializer.write(persons)
