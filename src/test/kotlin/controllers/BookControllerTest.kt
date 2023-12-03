@@ -227,13 +227,56 @@ class BookControllerTest {
         }
 
         @Test
-        fun `should return null if no book with the given author exists`() {
+        fun `searchBookByAuthor should return null if no book with the given author exists`() {
             assertEquals(null, populatedLibrary!!.searchBookByAuthor("J.K. Rowling"))
         }
 
         @Test
-        fun `should return null if no book with the given ISBN exists`() {
+        fun `searchBookByISBN should return null if no book with the given ISBN exists`() {
             assertEquals(null, populatedLibrary!!.searchBookByISBN("978-0547928234"))
+        }
+    }
+
+    @Nested
+    inner class updateMethods {
+        @Test
+        fun `updateBookTitle should return true if book was updated`() {
+            assertTrue(populatedLibrary!!.updateBookTitle(0, "The Silmarillion"))
+        }
+
+        @Test
+        fun `updateBookTitle should return false if book was not updated`() {
+            assertFalse(populatedLibrary!!.updateBookTitle(5, "The Silmarillion"))
+        }
+
+        @Test
+        fun `updateBookISBN should return true if book was updated`() {
+            assertTrue(populatedLibrary!!.updateBookISBN(0, "978-0547928234"))
+        }
+
+        @Test
+        fun `updateBookISBN should return false if book was not updated`() {
+            assertFalse(populatedLibrary!!.updateBookISBN(5, "978-0547928234"))
+        }
+
+        @Test
+        fun `updateBookAvailableCopies should return true if book was updated`() {
+            assertTrue(populatedLibrary!!.updateBookAvailableCopies(0, 2))
+        }
+
+        @Test
+        fun `updateBookAvailableCopies should return false if book was not updated`() {
+            assertFalse(populatedLibrary!!.updateBookAvailableCopies(5, 2))
+        }
+
+        @Test
+        fun `updateBookTotalCopies should return true if book was updated`() {
+            assertTrue(populatedLibrary!!.updateBookTotalCopies(0, 2))
+        }
+
+        @Test
+        fconun `updateBookTotalCopies should return false if book was not updated`() {
+            assertFalse(populatedLibrary!!.updateBookTotalCopies(5, 2))
         }
     }
 }
