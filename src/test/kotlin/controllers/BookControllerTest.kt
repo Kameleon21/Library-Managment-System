@@ -279,4 +279,17 @@ class BookControllerTest {
             assertFalse(populatedLibrary!!.updateBookTotalCopies(5, 2))
         }
     }
+
+    @Nested
+    inner class deleteMethods {
+        @Test
+        fun `should return the deleted book if successful`() {
+            assertEquals(book1, populatedLibrary!!.deleteBook(0))
+        }
+
+        @Test
+        fun `should return null if the index is invalid`() {
+            assertEquals(null, populatedLibrary!!.deleteBook(5))
+        }
+    }
 }
