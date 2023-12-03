@@ -1,5 +1,9 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     kotlin("jvm") version "1.9.0"
+    // Plugin for Dokka - KDoc generation tool
+    id("org.jetbrains.dokka") version "1.9.10"
     application
 }
 
