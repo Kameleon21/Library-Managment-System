@@ -33,10 +33,10 @@ fun showMainMenu(): Int {
     )
 }
 
-fun showUserMenu(userName: String): Int {
+fun showUserMenu(userName: String,ID:Int): Int {
     return readNextInt(
         """
-        Logged in as: $userName
+        Logged in as: $userName $ID
         Please choose a number option:
         1. View Available Books
         2. Search Books
@@ -108,7 +108,7 @@ fun login() {
            } while (true)
         } else {
             do {
-                val option = showUserMenu(loggedIn.name)
+                val option = showUserMenu(loggedIn.name,loggedIn.personId)
                 when (option) {
                     1 -> viewAvailableBooks()
                     2 -> searchBookOption()
@@ -151,7 +151,7 @@ fun exit() {
     logger.info { "Exit function called" }
     println("You chose to exit")
     save()
-    exitProcess(0)
+    exitProcess(0 )
 }
 
 fun viewAvailableBooks() {
@@ -208,7 +208,16 @@ fun searchBookOption() {
 
 fun borrowBook() {
     logger.info { "Borrow Book function called" }
-    println("Borrow Book function called \n")
+    println(bookAPI.availableBooks())
+    val bookID = readNextInt("Enter book ID: ")
+    val memberID = readNextInt("Enter member ID: ") - 1
+    val book = bookAPI.findBook(bookID)
+    if (book != null) {
+        val message = personAPI.borrowBookLogic(memberID, book)
+        println(message)
+    } else {
+        println("Book not found \n")
+    }
 }
 
 fun returnBook() {
@@ -218,7 +227,13 @@ fun returnBook() {
 
 fun viewMyBorrowedBooks() {
     logger.info { "View My Borrowed Books function called" }
-    println("View My Borrowed Books function called \n")
+    val memberID = readNextInt("Enter member ID: ") - 1
+    val member = personAPI.findPerson(memberID)
+    if (member != null) {
+        println(personAPI.listBorrowedBooks(memberID) + "\n")
+    } else {
+        println("Member not found \n")
+    }
 }
 
 fun viewAllBooks() {
@@ -267,11 +282,12 @@ fun addNewBook() {
     val bookID = bookAPI.numberOfBooks() + 1
     val title = readNextLine("Enter book title: ")
     val author = readNextLine("Enter book author: ")
+    val genre = readNextLine("Enter book genre: ")
     val ISBN = readNextLine("Enter book ISBN: ")
     val publicationYear = readNextLine("Enter book publication year: ")
     val availableCopies = readNextInt("Enter number of available copies: ")
     val totalCopies = readNextInt("Enter number of total copies: ")
-    val added = bookAPI.createBook(bookID, title, author, ISBN, publicationYear, availableCopies, totalCopies)
+    val added = bookAPI.createBook(bookID, title, author,genre,ISBN, publicationYear, availableCopies, totalCopies)
     if (added) {
         println("Book added successfully \n")
     } else {

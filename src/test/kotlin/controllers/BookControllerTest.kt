@@ -25,11 +25,11 @@ class BookControllerTest {
         populatedLibrary = BookController(XMLSerializer(File("books.xml")))
         emptyLibrary = BookController(XMLSerializer(File("books.xml")))
 
-        book1 = Book(1, "The Fellowship of the Ring", "J.R.R. Tolkien", "978-0547928210", "1954", 1, 1)
-        book2 = Book(2, "The Two Towers", "J.R.R. Tolkien", "978-0547928203", "1954", 1, 1)
-        book3 = Book(3, "The Return of the King", "J.R.R. Tolkien", "978-0547928197", "1955", 1, 1)
-        book4 = Book(4, "The Hobbit", "J.R.R. Tolkien", "978-0547928227", "1937", 0, 2)
-        book5 = Book(5, "The Militarisation", "J.R.R. Tolkien", "978-0547928224", "1977", 1, 1)
+        book1 = Book(1, "The Fellowship of the Ring", "J.R.R. Tolkien","Fantasy", "978-0547928210", "1954", 1, 1)
+        book2 = Book(2, "The Two Towers", "J.R.R. Tolkien","Sci-Fi", "978-0547928203", "1954", 1, 1)
+        book3 = Book(3, "The Return of the King", "J.R.R. Tolkien","Music","978-0547928197", "1955", 1, 1)
+        book4 = Book(4, "The Hobbit", "J.R.R. Tolkien","Pop","978-0547928227", "1937", 0, 2)
+        book5 = Book(5, "The Militarisation", "J.R.R. Tolkien","Self-Help","978-0547928224", "1977", 1, 1)
 
         populatedLibrary!!.addBook(book1!!)
         populatedLibrary!!.addBook(book2!!)
@@ -55,7 +55,7 @@ class BookControllerTest {
     inner class addingBooksMethods {
         @Test
         fun `should add a book to the library`() {
-            val book = Book(6, "The Silmarillion", "J.R.R. Tolkien", "978-0547928234", "1977", 1, 1)
+            val book = Book(6, "The Silmarillion", "J.R.R. Tolkien","Sci-Fi", "978-0547928234", "1977", 1, 1)
             assertTrue(emptyLibrary!!.addBook(book))
         }
 
@@ -66,12 +66,12 @@ class BookControllerTest {
 
         @Test
         fun `should return true when book was able to be created`() {
-            assertTrue(emptyLibrary!!.createBook(6, "The Silmarillion", "J.R.R. Tolkien", "978-0547928234", "1977", 1, 1))
+            assertTrue(emptyLibrary!!.createBook(6, "The Silmarillion", "J.R.R. Tolkien","Self-Help","978-0547928234", "1977", 1, 1))
         }
 
         @Test
         fun `should return false when book was not able to be created`() {
-            val isDuplicate = populatedLibrary!!.createBook(1, "The Silmarillion", "J.R.R. Tolkien", "978-0547928203", "1977", 1, 1)
+            val isDuplicate = populatedLibrary!!.createBook(1, "The Silmarillion", "J.R.R. Tolkien", "Sci-Fi","978-0547928203", "1977", 1, 1)
             assertFalse(isDuplicate)
         }
     }

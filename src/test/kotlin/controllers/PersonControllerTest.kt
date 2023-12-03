@@ -1,5 +1,6 @@
 package controllers
 
+import models.Book
 import models.Person
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -82,7 +83,6 @@ class PersonControllerTest {
         }
     }
 
-
     @Nested
     inner class register {
         @Test
@@ -109,9 +109,8 @@ class PersonControllerTest {
         }
     }
 
-
     @Nested
-    inner class listAllMembers {
+    inner class listingMethods {
         @Test
         fun `should return no members when list is empty`() {
             assertEquals("No members found", emptyLibrary!!.listAllMembers())
@@ -124,6 +123,34 @@ class PersonControllerTest {
                         "1:Person(personId=2, name=Jane Doe, email=jane@gamil.com, password=password, role=member)\n" +
                         "2:Person(personId=3, name=Billy, email=billy@gmail.com, password=password, role=admin)"
             assertEquals(expected, populatedLibrary!!.listAllMembers())
+        }
+
+        @Test
+        fun `listBorrowedBooks should return no books when no books are borrowed`() {
+            assertEquals("No books borrowed", populatedLibrary!!.listBorrowedBooks(1))
+        }
+
+        @Test
+        fun `listBorrowedBooks should return all books when there are books borrowed`() {
+            @Test
+            fun `listBorrowedBooks should return all books when there are books borrowed`() {
+                // Create test-specific book instances
+                val book1 = Book(1, "The Hobbit", "J.R.R Tolkien", "Fantasy", "123456789", "1937", 1, 1)
+                val book2 = Book(2, "The Lord of the Rings", "J.R.R Tolkien", "Fantasy", "123456789", "1954", 1, 1)
+                val book3 = Book(3, "The Silmarillion", "J.R.R Tolkien", "Fantasy", "123456789", "1977", 1, 1)
+
+                // Simulate borrowing books
+                populatedLibrary!!.borrowBookLogic(1, book1)
+                populatedLibrary!!.borrowBookLogic(1, book2)
+                populatedLibrary!!.borrowBookLogic(1, book3)
+
+                val expected = "0:Book(bookId=1, title=The Hobbit, author=J.R.R Tolkien, yearPublished=1937)\n" +
+                        "1:Book(bookId=2, title=The Lord of the Rings, author=J.R.R Tolkien, yearPublished=1954)\n" +
+                        "2:Book(bookId=3, title=The Silmarillion, author=J.R.R Tolkien, yearPublished=1977)"
+
+                assertEquals(expected, populatedLibrary!!.listBorrowedBooks(1))
+            }
+
         }
     }
 
@@ -154,6 +181,51 @@ class PersonControllerTest {
         fun `should return null for invalid member index`() {
             val deleteResult = populatedLibrary!!.deleteMember(10)
             assertNull(deleteResult)
+        }
+    }
+
+    @Nested
+    inner class borrowMethods {
+        @Test
+        fun `should return book borrowed successfully when book is borrowed`() {
+            val book = Book(1, "The Hobbit", "J.R.R Tolkien", "Fantasy", "123456789", "1937", 1, 1)
+            val borrowResult = populatedLibrary!!.borrowBookLogic(1, book)
+            assertEquals("Book borrowed successfully \n", borrowResult)
+        }
+
+        @Test
+        fun `should return book already borrowed when book is already borrowed`() {
+            val book = Book(1, "The Hobbit", "J.R.R Tolkien", "Fantasy", "123456789", "1937", 1, 1)
+            populatedLibrary!!.borrowBookLogic(1, book)
+            val borrowResult = populatedLibrary!!.borrowBookLogic(1, book)
+            assertEquals("Book already borrowed \n", borrowResult)
+        }
+
+        @Test
+        fun `should return member has borrowed 3 books already when member has borrowed 3 books already`() {
+            val book1 = Book(1, "The Hobbit", "J.R.R Tolkien", "Fantasy", "123456789", "1937", 1, 1)
+            val book2 = Book(2, "The Lord of the Rings", "J.R.R Tolkien", "Fantasy", "123456789", "1954", 1, 1)
+            val book3 = Book(3, "The Silmarillion", "J.R.R Tolkien", "Fantasy", "123456789", "1977", 2, 2)
+            val book4 = Book(4, "The Children of Hurin", "J.R.R Tolkien", "Fantasy", "123456789", "2007", 1, 1)
+            populatedLibrary!!.borrowBookLogic(1, book1)
+            populatedLibrary!!.borrowBookLogic(1, book2)
+            populatedLibrary!!.borrowBookLogic(1, book3)
+            val borrowResult = populatedLibrary!!.borrowBookLogic(1, book4)
+            assertEquals("Member has borrowed 3 books already \n", borrowResult)
+        }
+
+        @Test
+        fun `should return no copies of this book available when no copies of this book are available`() {
+            val book = Book(1, "The Hobbit", "J.R.R Tolkien", "Fantasy", "123456789", "1937", 0, 1)
+            val borrowResult = populatedLibrary!!.borrowBookLogic(1, book)
+            assertEquals("No copies of this book available \n", borrowResult)
+        }
+
+        @Test
+        fun `should return member not found when member is not found`() {
+            val book = Book(1, "The Hobbit", "J.R.R Tolkien", "Fantasy", "123456789", "1937", 1, 1)
+            val borrowResult = populatedLibrary!!.borrowBookLogic(10, book)
+            assertEquals("Member not found", borrowResult)
         }
     }
 

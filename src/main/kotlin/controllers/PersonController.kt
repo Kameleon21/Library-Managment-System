@@ -1,5 +1,6 @@
 package controllers
 
+import models.Book
 import models.Person
 import persistance.Serializer
 import utils.HelperFunctions.isValidListIndex
@@ -62,6 +63,35 @@ class PersonController(serializerType: Serializer) {
 
     fun login(email: String, password: String): Person? {
         return persons.firstOrNull { it.email == email && it.password == password }
+    }
+
+    fun borrowBookLogic(memberId: Int, book: Book): String {
+        val foundMember = findPerson(memberId) ?: return "Member not found"
+        if (foundMember.booksBorrowed.contains(book)) {
+            return "Book already borrowed \n"
+        }
+        if (foundMember.booksBorrowed.size >= 3) {
+            return "Member has borrowed 3 books already \n"
+        }
+        if (book.availableCopies <= 0) {
+            return "No copies of this book available \n"
+        }
+        foundMember.booksBorrowed.add(book)
+        book.availableCopies--
+        return "Book borrowed successfully \n"
+    }
+
+    fun listBorrowedBooks(index: Int): String {
+        val foundMember = findPerson(index)
+        return if (foundMember != null) {
+            if (foundMember.booksBorrowed.isEmpty()) {
+                "No books borrowed"
+            } else {
+                foundMember.booksBorrowed.joinToString(separator = "\n") { book ->
+                    "${foundMember.booksBorrowed.indexOf(book)}:Book(bookId=${book.bookID}, title=${book.title}, author=${book.author}, yearPublished=${book.publicationYear})"
+                }
+            }
+        } else "Member not found"
     }
 
     @Throws(Exception::class)

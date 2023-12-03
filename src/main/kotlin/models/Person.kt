@@ -6,5 +6,6 @@ data class Person(
     var email: String = " ",
     var password: String = " ",
     var role: String = "member",
+    var booksBorrowed: ArrayList<Book> = ArrayList()
 ) {
 }
