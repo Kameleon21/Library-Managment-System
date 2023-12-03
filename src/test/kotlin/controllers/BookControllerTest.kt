@@ -275,7 +275,7 @@ class BookControllerTest {
         }
 
         @Test
-        fconun `updateBookTotalCopies should return false if book was not updated`() {
+        fun `updateBookTotalCopies should return false if book was not updated`() {
             assertFalse(populatedLibrary!!.updateBookTotalCopies(5, 2))
         }
     }

@@ -1,12 +1,13 @@
 package utils
 
+import utils.HelperFunctions.capitalizeFirstLetter
 import utils.ScannerInput.readNextLine
 
 object InputValidation {
     fun promptForValidName(): String {
         var name: String
         do {
-            name = readNextLine("Enter your full name ( minimum 2 characters): ")
+            name = capitalizeFirstLetter(readNextLine("Enter your full name ( minimum 2 characters): "))
             if (!validateName(name)) println("Invalid name")
         } while (!validateName(name))
         return name

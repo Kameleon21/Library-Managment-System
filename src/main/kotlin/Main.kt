@@ -3,6 +3,7 @@ import controllers.PersonController
 import mu.KotlinLogging
 import persistance.XMLSerializer
 import persistance.YAMLSerializer
+import utils.HelperFunctions.capitalizeFirstLetter
 import utils.InputValidation.promptForValidEmail
 import utils.InputValidation.promptForValidName
 import utils.InputValidation.promptForValidPassword
@@ -272,7 +273,7 @@ fun addNewMember() {
     val name = promptForValidName()
     val email = promptForValidEmail()
     val password = promptForValidPassword()
-    val role = readNextLine("Enter your role: ")
+    val role = "member"
     val registered = personAPI.register(ID, name, email, password, role)
     if (registered) {
         println("Member added successfully \n")
@@ -316,9 +317,9 @@ fun viewBorrowingRecords() {
 fun addNewBook() {
     logger.info { "Add New Book function called" }
     val bookID = bookAPI.numberOfBooks() + 1
-    val title = readNextLine("Enter book title: ")
-    val author = readNextLine("Enter book author: ")
-    val genre = readNextLine("Enter book genre: ")
+    val title = capitalizeFirstLetter(readNextLine("Enter book title: "))
+    val author = capitalizeFirstLetter(readNextLine("Enter book author: "))
+    val genre = capitalizeFirstLetter(readNextLine("Enter book genre: "))
     val ISBN = readNextLine("Enter book ISBN: ")
     val publicationYear = readNextLine("Enter book publication year: ")
     val availableCopies = readNextInt("Enter number of available copies: ")
@@ -349,7 +350,7 @@ fun updateBookMenu() {
         when (option) {
             1 -> {
                 val bookID = readNextInt("Enter book ID: ")
-                val title = readNextLine("Enter book title: ")
+                val title = capitalizeFirstLetter(readNextLine("Enter book title: "))
                 val updated = bookAPI.updateBookTitle(bookID, title)
                 if (updated) {
                     println("Book title updated successfully \n")
