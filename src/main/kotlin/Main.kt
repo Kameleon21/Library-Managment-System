@@ -15,11 +15,20 @@ import java.io.File
 private val logger = KotlinLogging.logger {}
 private val bookAPI = BookController(YAMLSerializer(File("books.yaml")))
 private val personAPI = PersonController(YAMLSerializer(File("persons.yaml")))
+
+/**
+ * The entry point for the Personal Library Management System application.
+ */
 fun main() {
     load()
     runMenu()
 }
 
+/**
+ * Displays the main menu and reads the user's choice.
+ *
+ * @return The user's menu choice as an integer.
+ */
 fun showMainMenu(): Int {
     return readNextInt(
         """
@@ -34,6 +43,13 @@ fun showMainMenu(): Int {
     )
 }
 
+/**
+ * Displays the user menu for a logged-in user and reads the user's choice.
+ *
+ * @param userName The name of the logged-in user.
+ * @param ID The ID of the logged-in user.
+ * @return The user's menu choice as an integer.
+ */
 fun showUserMenu(userName: String, ID: Int): Int {
     return readNextInt(
         """
@@ -50,6 +66,12 @@ fun showUserMenu(userName: String, ID: Int): Int {
     )
 }
 
+/**
+ * Displays the administrator menu for a logged-in administrator and reads the admin's choice.
+ *
+ * @param adminName The name of the logged-in administrator.
+ * @return The admin's menu choice as an integer.
+ */
 fun showAdminMenu(adminName: String): Int {
     return readNextInt(
         """
@@ -71,6 +93,9 @@ fun showAdminMenu(adminName: String): Int {
 
 }
 
+/**
+ * Runs the main menu loop, handling user input and directing to appropriate actions.
+ */
 fun runMenu() {
     do {
         when (val option = showMainMenu()) {
@@ -82,6 +107,9 @@ fun runMenu() {
     } while (true)
 }
 
+/**
+ * Handles the login functionality.
+ */
 fun login() {
     logger.info { "Login function called" }
     val email = readNextLine("Enter your email: ")
@@ -127,6 +155,9 @@ fun login() {
 }
 
 
+/**
+ * Handles the registration functionality.
+ */
 fun register() {
     logger.info { "Register function called" }
     val ID = personAPI.numberOfPersons() + 1
@@ -148,6 +179,9 @@ fun register() {
     }
 }
 
+/**
+ * Exits the application, ensuring any data is saved before exiting.
+ */
 fun exit() {
     logger.info { "Exit function called" }
     println("You chose to exit")
@@ -155,10 +189,17 @@ fun exit() {
     exitProcess(0)
 }
 
+/**
+ * Displays a list of available books in the library.
+ */
 fun viewAvailableBooks() {
     logger.info { "View Available Books function called" }
     println(bookAPI.availableBooks())
 }
+
+/**
+ * Provides options to search for books and handles user input for book searches.
+ */
 
 fun searchBookOption() {
     logger.info { "Search Books function called" }
@@ -210,6 +251,9 @@ fun searchBookOption() {
     } while (true)
 }
 
+/**
+ * Handles the functionality for borrowing a book.
+ */
 fun borrowBook() {
     logger.info { "Borrow Book function called" }
     println(bookAPI.availableBooks())
@@ -224,6 +268,9 @@ fun borrowBook() {
     }
 }
 
+/**
+ * Handles the functionality for returning a book.
+ */
 fun returnBook() {
     logger.info { "Return Book function called" }
     val memberId = readNextInt("Enter member ID: ") - 1
@@ -247,6 +294,9 @@ fun returnBook() {
     }
 }
 
+/**
+ * Displays the books borrowed by a specific user.
+ */
 fun viewMyBorrowedBooks() {
     logger.info { "View My Borrowed Books function called" }
     val memberID = readNextInt("Enter member ID: ") - 1
@@ -258,16 +308,23 @@ fun viewMyBorrowedBooks() {
     }
 }
 
+
 fun viewAllBooks() {
     logger.info { "View All Books function called" }
     println(bookAPI.listAllBooks())
 }
 
+/**
+ * Displays details about a specific book.
+ */
 fun returnBookDetails() {
     logger.info { "Return Book Details function called" }
     println("Return Book Details function called \n")
 }
 
+/**
+ * Handles the functionality for deleting a book.
+ */
 fun deleteBook() {
     logger.info { "Delete Book function called" }
     println(bookAPI.listAllBooks())
@@ -280,10 +337,18 @@ fun deleteBook() {
     }
 }
 
+/**
+ * Displays all registered members.
+ */
+
 fun viewAllMembers() {
     logger.info { "View All Members function called" }
     println(personAPI.listAllMembers())
 }
+
+/**
+ * Handles the functionality for adding a new member.
+ */
 
 fun addNewMember() {
     logger.info { "Add New Member function called" }
@@ -300,6 +365,9 @@ fun addNewMember() {
     }
 }
 
+/**
+ * Handles the functionality for updating member details.
+ */
 fun updateMemberDetails() {
     logger.info { "Update Member Details function called" }
     val memberID = readNextInt("Enter member ID: ") - 1
@@ -314,7 +382,9 @@ fun updateMemberDetails() {
     }
 }
 
-
+/**
+ * Handles the functionality for deleting a member.
+ */
 fun deleteMember() {
     logger.info { "Delete Member function called" }
     println(personAPI.listAllMembers())
@@ -327,11 +397,18 @@ fun deleteMember() {
     }
 }
 
+/**
+ * Displays the borrowing records of all members.
+ */
+
 fun viewBorrowingRecords() {
     logger.info { "View Borrowing Records function called" }
     println(personAPI.showBorrowedBooksByAllMembers())
 }
 
+/**
+ * Handles the functionality for adding a new book.
+ */
 fun addNewBook() {
     logger.info { "Add New Book function called" }
     val bookID = bookAPI.numberOfBooks() + 1
@@ -350,6 +427,9 @@ fun addNewBook() {
     }
 }
 
+/**
+ * Displays the update book menu and handles user input for updating book details.
+ */
 fun updateBookMenu() {
     logger.info { "Update Book Details function called" }
     do {
@@ -416,6 +496,9 @@ fun updateBookMenu() {
     } while (true)
 }
 
+/**
+ * Loads data from persistent storage.
+ */
 fun load() {
     logger.info { "Load function called" }
     try {
@@ -426,6 +509,9 @@ fun load() {
     }
 }
 
+/**
+ * Saves data to persistent storage.
+ */
 fun save() {
     logger.info { "Save function called" }
     personAPI.save()
