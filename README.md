@@ -49,6 +49,9 @@ Authenticated users will have additional options to view and interact with the l
 ## Documentation
 The project includes comprehensive KDoc comments and is integrated with Dokka for generating API documentation. The generated documentation can be found in the /docs directory or hosted on GitHub Pages.
 
+## Screenshot of UML diagram:
+![image](https://github.com/Kameleon21/Library-Managment-System/assets/92760571/a646e17b-49f2-426d-9d9a-9975bd9018ee)
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would
 like to change.
