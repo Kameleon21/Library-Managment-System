@@ -3,6 +3,7 @@ import controllers.PersonController
 import mu.KotlinLogging
 import persistance.XMLSerializer
 import persistance.YAMLSerializer
+import utils.HelperFunctions.capitalizeFirstLetter
 import utils.InputValidation.promptForValidEmail
 import utils.InputValidation.promptForValidName
 import utils.InputValidation.promptForValidPassword
@@ -33,7 +34,7 @@ fun showMainMenu(): Int {
     )
 }
 
-fun showUserMenu(userName: String,ID:Int): Int {
+fun showUserMenu(userName: String, ID: Int): Int {
     return readNextInt(
         """
         Logged in as: $userName $ID
@@ -56,7 +57,7 @@ fun showAdminMenu(adminName: String): Int {
         ADMINISTRATOR MENU
         1. View all books
         2. Add new book
-        3. Update book details
+        3. Update book Menu 
         4. Delete book
         5. View all members
         6. Add new member
@@ -90,25 +91,25 @@ fun login() {
     if (loggedIn != null) {
         println("Login successful \n")
         if (loggedIn.role == "admin") {
-           do {
-               val option = showAdminMenu(loggedIn.name)
-               when (option) {
-                   1 -> viewAllBooks()
-                   2 -> addNewBook()
-                   3 -> updateBookDetails()
-                   4 -> deleteBook()
-                   5 -> viewAllMembers()
-                   6 -> addNewMember()
-                   7 -> updateMemberDetails()
-                   8 -> deleteMember()
-                   9 -> viewBorrowingRecords()
-                   10 -> break
-                   else -> println("Invalid option")
-               }
-           } while (true)
+            do {
+                val option = showAdminMenu(loggedIn.name)
+                when (option) {
+                    1 -> viewAllBooks()
+                    2 -> addNewBook()
+                    3 -> updateBookMenu()
+                    4 -> deleteBook()
+                    5 -> viewAllMembers()
+                    6 -> addNewMember()
+                    7 -> updateMemberDetails()
+                    8 -> deleteMember()
+                    9 -> viewBorrowingRecords()
+                    10 -> break
+                    else -> println("Invalid option")
+                }
+            } while (true)
         } else {
             do {
-                val option = showUserMenu(loggedIn.name,loggedIn.personId)
+                val option = showUserMenu(loggedIn.name, loggedIn.personId)
                 when (option) {
                     1 -> viewAvailableBooks()
                     2 -> searchBookOption()
@@ -133,7 +134,7 @@ fun register() {
     val email = promptForValidEmail()
     val password = promptForValidPassword()
     val role = readNextLine("Enter your role: ")
-    val registered = personAPI.register(ID,name, email, password, role)
+    val registered = personAPI.register(ID, name, email, password, role)
     if (registered) {
         println(
             """
@@ -151,7 +152,7 @@ fun exit() {
     logger.info { "Exit function called" }
     println("You chose to exit")
     save()
-    exitProcess(0 )
+    exitProcess(0)
 }
 
 fun viewAvailableBooks() {
@@ -173,7 +174,7 @@ fun searchBookOption() {
         """.trimIndent()
         )
         when (option) {
-            1 ->  {
+            1 -> {
                 val title = readNextLine("Enter book title: ")
                 val book = bookAPI.searchBookByTitle(title)
                 if (book != null) {
@@ -182,7 +183,8 @@ fun searchBookOption() {
                     println("Book not found")
                 }
             }
-            2 ->{
+
+            2 -> {
                 val author = readNextLine("Enter book author: ")
                 val book = bookAPI.searchBookByAuthor(author)
                 if (book != null) {
@@ -191,6 +193,7 @@ fun searchBookOption() {
                     println("Book not found")
                 }
             }
+
             3 -> {
                 val ISBN = readNextLine("Enter book ISBN: ")
                 val book = bookAPI.searchBookByISBN(ISBN)
@@ -200,6 +203,7 @@ fun searchBookOption() {
                     println("Book not found")
                 }
             }
+
             4 -> break
             else -> println("Invalid option")
         }
@@ -248,28 +252,61 @@ fun returnBookDetails() {
 
 fun deleteBook() {
     logger.info { "Delete Book function called" }
-    println("Delete Book function called \n")
+    println(bookAPI.listAllBooks())
+    val bookID = readNextInt("Enter book ID: ")
+    val deleted = bookAPI.deleteBook(bookID)
+    if (deleted != null) {
+        println("Book deleted successfully \n")
+    } else {
+        println("Book not deleted \n")
+    }
 }
 
 fun viewAllMembers() {
     logger.info { "View All Members function called" }
-    println("View All Members function called \n")
+    println(personAPI.listAllMembers())
 }
 
 fun addNewMember() {
     logger.info { "Add New Member function called" }
-    println("Add New Member function called \n")
+    val ID = personAPI.numberOfPersons() + 1
+    val name = promptForValidName()
+    val email = promptForValidEmail()
+    val password = promptForValidPassword()
+    val role = "member"
+    val registered = personAPI.register(ID, name, email, password, role)
+    if (registered) {
+        println("Member added successfully \n")
+    } else {
+        println("Member not added \n")
+    }
 }
 
 fun updateMemberDetails() {
     logger.info { "Update Member Details function called" }
-    println("Update Member Details function called \n")
+    val memberID = readNextInt("Enter member ID: ") - 1
+    val name = promptForValidName()
+    val email = promptForValidEmail()
+    val password = promptForValidPassword()
+    val updated = personAPI.updateMember(memberID,name, email, password)
+    if (updated) {
+        println("Member details updated successfully \n")
+    } else {
+        println("Member details not updated \n")
+    }
 }
 
 
 fun deleteMember() {
     logger.info { "Delete Member function called" }
-    println("Delete Member function called \n")
+    println(personAPI.listAllMembers())
+    val memberID = readNextInt("Enter member ID: ")
+    val deleted = personAPI.deleteMember(memberID)
+    if (deleted != null) {
+        println("Member deleted successfully \n")
+    } else {
+        println("Member not deleted \n")
+    }
 }
 
 fun viewBorrowingRecords() {
@@ -280,14 +317,14 @@ fun viewBorrowingRecords() {
 fun addNewBook() {
     logger.info { "Add New Book function called" }
     val bookID = bookAPI.numberOfBooks() + 1
-    val title = readNextLine("Enter book title: ")
-    val author = readNextLine("Enter book author: ")
-    val genre = readNextLine("Enter book genre: ")
+    val title = capitalizeFirstLetter(readNextLine("Enter book title: "))
+    val author = capitalizeFirstLetter(readNextLine("Enter book author: "))
+    val genre = capitalizeFirstLetter(readNextLine("Enter book genre: "))
     val ISBN = readNextLine("Enter book ISBN: ")
     val publicationYear = readNextLine("Enter book publication year: ")
     val availableCopies = readNextInt("Enter number of available copies: ")
     val totalCopies = readNextInt("Enter number of total copies: ")
-    val added = bookAPI.createBook(bookID, title, author,genre,ISBN, publicationYear, availableCopies, totalCopies)
+    val added = bookAPI.createBook(bookID, title, author, genre, ISBN, publicationYear, availableCopies, totalCopies)
     if (added) {
         println("Book added successfully \n")
     } else {
@@ -295,9 +332,70 @@ fun addNewBook() {
     }
 }
 
-fun updateBookDetails() {
+fun updateBookMenu() {
     logger.info { "Update Book Details function called" }
-    println("Update Book Details function called \n")
+    do {
+        println(bookAPI.listAllBooks())
+        val option = readNextInt(
+            """
+            Please choose a number option:
+            1. Update book title
+            2. Update book ISBN
+            3. Update number of available copies
+            4. Update number of total copies
+            5. Return to previous menu
+            
+        """.trimIndent()
+        )
+        when (option) {
+            1 -> {
+                val bookID = readNextInt("Enter book ID: ")
+                val title = capitalizeFirstLetter(readNextLine("Enter book title: "))
+                val updated = bookAPI.updateBookTitle(bookID, title)
+                if (updated) {
+                    println("Book title updated successfully \n")
+                } else {
+                    println("Book not updated \n")
+                }
+            }
+
+            2 -> {
+                val bookID = readNextInt("Enter book ID: ")
+                val ISBN = readNextLine("Enter book ISBN: ")
+                val updated = bookAPI.updateBookISBN(bookID, ISBN)
+                if (updated) {
+                    println("Book ISBN updated successfully \n")
+                } else {
+                    println("Book not updated \n")
+                }
+            }
+
+            3 -> {
+                val bookID = readNextInt("Enter book ID: ")
+                val availableCopies = readNextInt("Enter number of available copies: ")
+                val updated = bookAPI.updateBookAvailableCopies(bookID, availableCopies)
+                if (updated) {
+                    println("Book available copies updated successfully \n")
+                } else {
+                    println("Book not updated \n")
+                }
+            }
+
+            4 -> {
+                val bookID = readNextInt("Enter book ID: ")
+                val totalCopies = readNextInt("Enter number of total copies: ")
+                val updated = bookAPI.updateBookTotalCopies(bookID, totalCopies)
+                if (updated) {
+                    println("Book total copies updated successfully \n")
+                } else {
+                    println("Book not updated \n")
+                }
+            }
+
+            5 -> break
+            else -> println("Invalid option")
+        }
+    } while (true)
 }
 
 fun load() {

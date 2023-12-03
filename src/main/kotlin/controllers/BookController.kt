@@ -61,6 +61,30 @@ class BookController(serializerType: Serializer) {
         } else false
     }
 
+    fun updateBookISBN(index: Int, bookISBN: String): Boolean {
+        val foundBook = findBook(index)
+        return if (foundBook != null) {
+            foundBook.ISBN = bookISBN
+            true
+        } else false
+    }
+
+    fun updateBookAvailableCopies(index: Int, bookAvailableCopies: Int): Boolean {
+        val foundBook = findBook(index)
+        return if (foundBook != null) {
+            foundBook.availableCopies = bookAvailableCopies
+            true
+        } else false
+    }
+
+    fun updateBookTotalCopies(index: Int, bookTotalCopies: Int): Boolean {
+        val foundBook = findBook(index)
+        return if (foundBook != null) {
+            foundBook.totalCopies = bookTotalCopies
+            true
+        } else false
+    }
+
     fun deleteBook(index: Int): Book? {
         return if (isValidListIndex(index, books)) {
             books.removeAt(index)
